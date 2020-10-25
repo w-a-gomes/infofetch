@@ -73,9 +73,65 @@ class InfoFetch(object):
         head_base = '\033[m' + '-'*len_head
 
         # Nome do Sistema
-        os_pretty_name = os_info.get_pretty_name()
-        name = os_pretty_name if os_pretty_name else os_info.get_name() + '' + os_info.get_version()
+        os_pretty_name_ = os_info.get_pretty_name()
+        os_name_ = os_info.get_name()
+        name = os_pretty_name_ if os_pretty_name_ else os_name_ + '' + os_info.get_version()
         os_name = name + ' ' + os_info.get_codename()
+        if not os_name and not os_pretty_name_:
+            os_name = None
+
+        # Arquitetura
+        architecture_ = os_info.get_architecture()
+        architecture = architecture_ + ' bits' if architecture_ else None
+
+        # Kernel
+        kernel_ = os_info.get_kernel()
+        kernel = kernel_ + ' ' + os_info.get_kernel_version() if kernel_ else None
+
+        # Placa mãe
+        motherboard_ = os_info.get_motherboard()
+        motherboard_version_ = os_info.get_motherboard_version()
+        motherboard = None
+        if motherboard_ and motherboard_version_:
+            motherboard = '{}, version:{}'.format(motherboard_, motherboard_version_)
+        elif motherboard_ and not motherboard_version_:
+            motherboard = motherboard_
+
+        # CPU
+        cpu_ = os_info.get_cpu()
+        cpu = cpu_ if cpu_ else None
+
+        # GPU
+        gpu_ = os_info.get_gpu()
+        gpu = gpu_ if gpu_ else None
+
+        # RAM
+        ram_ = os_info.get_ram()
+        ram = '{}, used {}, free {}'.format(ram_, os_info.get_ram_used(), os_info.get_ram_free()) if ram_ else None
+
+        # Swap
+        swap_ = os_info.get_swap()
+        swap = '{}, used {}, free {}'.format(swap_, os_info.get_swap_used(), os_info.get_swap_free()) if swap_ else None
+
+        # Resolução
+        resolution_ = os_info.get_screen_resolution()
+        resolution = resolution_ if resolution_ else None
+
+        # Uptime
+        uptime_ = os_info.get_uptime()
+        uptime = uptime_ if uptime_ else None
+
+        # Shell
+        shell_ = os_info.get_shell()
+        shell = shell_ if shell_ else None
+
+        # Interface gráfica
+        de_ = os_info.get_desktop_environment()
+        de = '{} {}'.format(de_, os_info.get_desktop_environment_version()) if de_ else None
+
+        # Gerenciador de janelas
+        wm_ = os_info.get_window_manager()
+        wm = wm_ if wm_ else None
 
         # Pacotes
         native_packages = os_info.get_packages()
@@ -94,22 +150,16 @@ class InfoFetch(object):
             total_packages = str(int(native_packages) + int(flatpak_packages) + int(snap_packages))
             packages_details = ' ({}{}{})'.format(native_packages_format, flatpak_packages_format, snap_packages_format)
         packages = total_packages + packages_details
+        if not native_packages:
+            packages = None
 
-        # Resto das informações
-        architecture = os_info.get_architecture() + ' bits'
-        kernel = os_info.get_kernel() + ' ' + os_info.get_kernel_version()
-        motherboard = '{}, version:{}'.format(os_info.get_motherboard(), os_info.get_motherboard_version())
-        cpu = os_info.get_cpu()
-        gpu = os_info.get_gpu()
-        ram = '{}, used {}, free {}'.format(os_info.get_ram(), os_info.get_ram_used(), os_info.get_ram_free())
-        swap = '{}, used {}, free {}'.format(os_info.get_swap(), os_info.get_swap_used(), os_info.get_swap_free())
-        resolution = os_info.get_screen_resolution()
-        uptime = os_info.get_uptime()
-        shell = os_info.get_shell()
-        de = '{} {}'.format(os_info.get_desktop_environment(), os_info.get_desktop_environment_version())
-        wm = os_info.get_window_manager()
-        font = os_info.get_font()
-        browser = os_info.get_browser()
+        # Fonte
+        font_ = os_info.get_font()
+        font = font_ if font_ else None
+
+        # Navegador
+        browser_ = os_info.get_browser()
+        browser = browser_ if browser_ else None
 
         system_info_list = [
             head,
@@ -129,7 +179,7 @@ class InfoFetch(object):
             accent_color + 'WM: ' + '\033[m' + wm,
             accent_color + 'Packages: ' + '\033[m' + packages,
             accent_color + 'Font: ' + '\033[m' + font,
-            accent_color + 'Browser: ' + '\033[m' + browser,
+            accent_color + 'Default browser: ' + '\033[m' + browser,
         ]
 
         # Falta verificar item nulo
@@ -138,8 +188,8 @@ class InfoFetch(object):
         return system_info_list
 
     def main(self) -> None:
-        for i in self.__illusion_float(self.__logo_list, self.__info_list, 40):
-            print(i)
+        for item in self.__illusion_float(self.__logo_list, self.__info_list, 40):
+            print(item)
 
 
 if __name__ == '__main__':
