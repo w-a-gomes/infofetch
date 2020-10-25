@@ -56,18 +56,47 @@ class InfoFetch(object):
 
         # Cabeçalho
         head = accent_color + os_info.get_username() + '@' + os_info.get_hostname() + '\033[m'
-        head_base = '\033[m' + '-'*len(head)
+        len_head = len(head) - len(accent_color) - len('\033[m')
+        head_base = '\033[m' + '-'*len_head
+
         # Nome do Sistema
         os_pretty_name = os_info.get_pretty_name()
         name = os_pretty_name if os_pretty_name else os_info.get_name() + '' + os_info.get_version()
         os_name = name + ' ' + os_info.get_codename()
-        # ...
+
+        # Pacotes
+        native_packages = os_info.get_packages()
+        native_packages_manager = os_info.get_package_manager()
+        flatpak_packages = os_info.get_flatpak_packages()
+        snap_packages = os_info.get_snap_packages()
+        # Pacotes - variáveis de uso final
+        total_packages = native_packages
+        packages_details = ' - ' + native_packages_manager
+        # Pacotes - Condição: Se houver flatpak ou snap
+        if flatpak_packages or snap_packages:
+            native_packages_format = '{}={}'.format(native_packages_manager, native_packages)
+            flatpak_packages_format = ', flatpak={}'.format(flatpak_packages)
+            snap_packages_format = ', snap={}'.format(snap_packages)
+            # Variáveis de uso final
+            total_packages = str(int(native_packages) + int(flatpak_packages) + int(snap_packages))
+            packages_details = ' ({}{}{})'.format(native_packages_format, flatpak_packages_format, snap_packages_format)
+        packages = total_packages + packages_details
+
+        # Resto das informações
         architecture = os_info.get_architecture() + ' bits'
         kernel = os_info.get_kernel() + ' ' + os_info.get_kernel_version()
         motherboard = '{}, version:{}'.format(os_info.get_motherboard(), os_info.get_motherboard_version())
         cpu = os_info.get_cpu()
         gpu = os_info.get_gpu()
         ram = '{}, used {}, free {}'.format(os_info.get_ram(), os_info.get_ram_used(), os_info.get_ram_free())
+        swap = '{}, used {}, free {}'.format(os_info.get_swap(), os_info.get_swap_used(), os_info.get_swap_free())
+        resolution = os_info.get_screen_resolution()
+        uptime = os_info.get_uptime()
+        shell = os_info.get_shell()
+        de = '{} {}'.format(os_info.get_desktop_environment(), os_info.get_desktop_environment_version())
+        wm = os_info.get_window_manager()
+        font = os_info.get_font()
+        browser = os_info.get_browser()
 
         system_info_list = [
             head,
@@ -79,15 +108,15 @@ class InfoFetch(object):
             accent_color + 'CPU: ' + '\033[m' + cpu,
             accent_color + 'GPU: ' + '\033[m' + gpu,
             accent_color + 'RAM: ' + '\033[m' + ram,
-            accent_color + 'Swap: ' + '\033[m' + '',
-            accent_color + 'Resolution: ' + '\033[m' + '',
-            accent_color + 'Uptime: ' + '\033[m' + '',
-            accent_color + 'Shell: ' + '\033[m' + '',
-            accent_color + 'DE: ' + '\033[m' + '',
-            accent_color + 'WM: ' + '\033[m' + '',
-            accent_color + 'Packages: ' + '\033[m' + '',
-            accent_color + 'Font: ' + '\033[m' + '',
-            accent_color + 'Browser: ' + '\033[m' + '',
+            accent_color + 'Swap: ' + '\033[m' + swap,
+            accent_color + 'Resolution: ' + '\033[m' + resolution,
+            accent_color + 'Uptime: ' + '\033[m' + uptime,
+            accent_color + 'Shell: ' + '\033[m' + shell,
+            accent_color + 'DE: ' + '\033[m' + de,
+            accent_color + 'WM: ' + '\033[m' + wm,
+            accent_color + 'Packages: ' + '\033[m' + packages,
+            accent_color + 'Font: ' + '\033[m' + font,
+            accent_color + 'Browser: ' + '\033[m' + browser,
         ]
 
         # Falta verificar item nulo
