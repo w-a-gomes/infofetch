@@ -78,20 +78,20 @@ class InfoFetch(object):
         name = os_pretty_name_ if os_pretty_name_ else os_name_ + '' + os_info.get_version()
         os_name = name + ' ' + os_info.get_codename()
         if not os_name and not os_pretty_name_:
-            os_name = None
+            os_name = 'unknown'
 
         # Arquitetura
         architecture_ = os_info.get_architecture()
-        architecture = architecture_ + ' bits' if architecture_ else None
+        architecture = architecture_ + ' bits' if architecture_ else 'unknown'
 
         # Kernel
         kernel_ = os_info.get_kernel()
-        kernel = kernel_ + ' ' + os_info.get_kernel_version() if kernel_ else None
+        kernel = kernel_ + ' ' + os_info.get_kernel_version() if kernel_ else 'unknown'
 
         # Placa mãe
         motherboard_ = os_info.get_motherboard()
         motherboard_version_ = os_info.get_motherboard_version()
-        motherboard = None
+        motherboard = 'unknown'
         if motherboard_ and motherboard_version_:
             motherboard = '{}, version:{}'.format(motherboard_, motherboard_version_)
         elif motherboard_ and not motherboard_version_:
@@ -99,39 +99,42 @@ class InfoFetch(object):
 
         # CPU
         cpu_ = os_info.get_cpu()
-        cpu = cpu_ if cpu_ else None
+        cpu = cpu_ if cpu_ else 'unknown'
 
         # GPU
         gpu_ = os_info.get_gpu()
-        gpu = gpu_ if gpu_ else None
+        gpu = gpu_ if gpu_ else 'unknown'
 
         # RAM
         ram_ = os_info.get_ram()
-        ram = '{}, used {}, free {}'.format(ram_, os_info.get_ram_used(), os_info.get_ram_free()) if ram_ else None
+        ram = '{}, used {}, free {}'.format(
+            ram_, os_info.get_ram_used(), os_info.get_ram_free()) if ram_ else 'unknown'
 
         # Swap
         swap_ = os_info.get_swap()
-        swap = '{}, used {}, free {}'.format(swap_, os_info.get_swap_used(), os_info.get_swap_free()) if swap_ else None
+        swap = '{}, used {}, free {}'.format(
+            swap_, os_info.get_swap_used(), os_info.get_swap_free()) if swap_ else 'unknown'
 
         # Resolução
         resolution_ = os_info.get_screen_resolution()
-        resolution = resolution_ if resolution_ else None
+        resolution = resolution_ if resolution_ else 'unknown'
 
         # Uptime
         uptime_ = os_info.get_uptime()
-        uptime = uptime_ if uptime_ else None
+        uptime = uptime_ if uptime_ else 'unknown'
 
         # Shell
         shell_ = os_info.get_shell()
-        shell = shell_ if shell_ else None
+        shell = shell_ if shell_ else 'unknown'
 
         # Interface gráfica
         de_ = os_info.get_desktop_environment()
-        de = '{} {}'.format(de_, os_info.get_desktop_environment_version()) if de_ else None
+        de = '{} {}'.format(
+            de_, os_info.get_desktop_environment_version()) if de_ else 'unknown'
 
         # Gerenciador de janelas
         wm_ = os_info.get_window_manager()
-        wm = wm_ if wm_ else None
+        wm = wm_ if wm_ else 'unknown'
 
         # Pacotes
         native_packages = os_info.get_packages()
@@ -148,18 +151,19 @@ class InfoFetch(object):
             snap_packages_format = ', snap={}'.format(snap_packages)
             # Variáveis de uso final
             total_packages = str(int(native_packages) + int(flatpak_packages) + int(snap_packages))
-            packages_details = ' ({}{}{})'.format(native_packages_format, flatpak_packages_format, snap_packages_format)
+            packages_details = ' ({}{}{})'.format(
+                native_packages_format, flatpak_packages_format, snap_packages_format)
         packages = total_packages + packages_details
         if not native_packages:
-            packages = None
+            packages = 'unknown'
 
         # Fonte
         font_ = os_info.get_font()
-        font = font_ if font_ else None
+        font = font_ if font_ else 'unknown'
 
         # Navegador
         browser_ = os_info.get_browser()
-        browser = browser_ if browser_ else None
+        browser = browser_ if browser_ else 'unknown'
 
         system_info_list = [
             head,
@@ -182,8 +186,10 @@ class InfoFetch(object):
             accent_color + 'Default browser: ' + '\033[m' + browser,
         ]
 
-        # Falta verificar item nulo
-        # ...
+        # Remover informação indisponível
+        for info in system_info_list:
+            if info[-len('unknown'):] == 'unknown':
+                system_info_list.remove(info)
 
         return system_info_list
 
