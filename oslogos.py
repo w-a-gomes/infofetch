@@ -1,15 +1,13 @@
 #!/usr/bin/env python3
 # https://github.com/w-a-gomes/systemutils
-import osinfo
 import colors
 
 
 class Logo(object):
-    def __init__(self):
-        self.os_id = osinfo.OsInfo().get_name_id() if osinfo.OsInfo().get_name_id() else 'linux-kernel'
-        self.color = colors.Color()
-        self.accent_color = self.color.get_style(color='green')
-        self.list_of_supported_logos = [
+    def __init__(self, os_name_id: str = 'linux-kernel'):
+        self.__os_id = os_name_id
+        self.__accent_color = '\033[32m'
+        self.__list_of_supported_logos = [
             'arch-linux',
             'debian', 'deepin',
             'elementary-os', 'endless',
@@ -25,34 +23,35 @@ class Logo(object):
 
     def set_os_name_id(self, os_name_id: str = None):
         if os_name_id:
-            self.os_id = os_name_id
+            self.__os_id = os_name_id
 
     def get_list_of_supported_logos(self) -> list:
-        return self.list_of_supported_logos
+        return self.__list_of_supported_logos
 
     def get_colored_ansi_code_as_list(self) -> list:
         return self.get_colored_ansi_code().split('\n')
 
     def get_accent_color(self):
-        return self.accent_color
+        return self.__accent_color
 
     # noinspection SpellCheckingInspection
     def get_colored_ansi_code(self) -> str:
-        blue = self.color.get_style(color='blue')
-        blue_dark = self.color.get_style(color='blue', style='dark')
-        blue_bold = self.color.get_style(color='blue', style='bold')
-        red = self.color.get_style(color='red')
-        red_bold = self.color.get_style(color='red', style='bold')
-        white = self.color.get_style(color='white')
-        white_bold = self.color.get_style(color='white', style='bold')
-        green = self.color.get_style(color='green')
-        green_back = self.color.get_style(color='green', background='green')
-        cyan = self.color.get_style(color='cyan')
-        yellow = self.color.get_style(color='yellow')
-        reset = self.color.reset_style()
+        color = colors.Color()
+        blue = color.get_style(color='blue')
+        blue_dark = color.get_style(color='blue', style='dark')
+        blue_bold = color.get_style(color='blue', style='bold')
+        red = color.get_style(color='red')
+        red_bold = color.get_style(color='red', style='bold')
+        white = color.get_style(color='white')
+        white_bold = color.get_style(color='white', style='bold')
+        green = color.get_style(color='green')
+        green_back = color.get_style(color='green', background='green')
+        cyan = color.get_style(color='cyan')
+        yellow = color.get_style(color='yellow')
+        reset = color.reset_style()
 
-        if self.os_id == 'arch-linux':
-            self.accent_color = blue
+        if self.__os_id == 'arch-linux':
+            self.__accent_color = blue
             return """
 {}                   ..                   
 {}                   O0                   
@@ -73,13 +72,13 @@ class Logo(object):
 {}  :WMMNkl,.                   'ckXMMMo  
 {} xXx:.                            .;dKk 
 {}''                                    .'
-{}{}""".format(
+{}""".format(
                 blue, blue, blue, blue, blue, blue, blue, blue, blue, blue, blue,
-                blue, blue, blue, blue, blue, blue, blue, blue, blue, reset
+                blue, blue, blue, blue, blue, blue, blue, blue, reset
             )
 
-        elif self.os_id == 'debian':
-            self.accent_color = red
+        elif self.__os_id == 'debian':
+            self.__accent_color = red
             return """
 {}                .:c'....                
 {}            .ckXMMMMWMMMNOol:.          
@@ -100,13 +99,13 @@ class Logo(object):
 {}           cKK:                         
 {}             .cddc.                     
 {}                 .;;.
-{}{}""".format(
+{}""".format(
                 red, red, red, red, red, red, red, red, red, red, red,
-                red, red, red, red, red, red, red, red, red, reset
+                red, red, red, red, red, red, red, red, reset
             )
 
-        elif self.os_id == 'deepin':
-            self.accent_color = blue
+        elif self.__os_id == 'deepin':
+            self.__accent_color = blue
             return """
 {}               .';::::;'.               
 {}          .,:looo{}xXXXXXK0O{}o:'.          
@@ -127,7 +126,7 @@ class Logo(object):
 {}       .';::::::::::co{}OXMMMWK{}kc'.       
 {}           .',;;:l{}dO00Okx{}o:'.           
 {}                ...''...
-{}{}""".format(
+{}""".format(
                 blue,
                 blue, white, blue,
                 blue, white, blue,
@@ -147,11 +146,11 @@ class Logo(object):
                 blue, white, blue,
                 blue, white, blue,
                 blue,
-                blue, reset
+                reset
             )
 
-        elif self.os_id == 'elementary-os':
-            self.accent_color = blue
+        elif self.__os_id == 'elementary-os':
+            self.__accent_color = blue
             return """
 {}              .',::ccc:,'.              
 {}          .,:ccc{}looooool{}ccc:,.          
@@ -172,7 +171,7 @@ class Logo(object):
 {}       ':llo{}k0KKKo{}0OO0{}oKKK0x{}oll:'       
 {}          .,:cll{}XkookK{}lllc:,.           
 {}              .';:cccc:;'.
-{}{}""".format(
+{}""".format(
                 blue,
                 blue, white, blue,
                 blue, white, blue, white, blue,
@@ -192,11 +191,11 @@ class Logo(object):
                 blue, white, blue, white, blue,
                 blue, white, blue,
                 blue,
-                blue, reset
+                reset
             )
 
-        elif self.os_id == 'endless':
-            self.accent_color = red_bold
+        elif self.__os_id == 'endless':
+            self.__accent_color = red_bold
             return """
                                         
                                         
@@ -217,13 +216,13 @@ class Logo(object):
                                         
                                         
                      
-{}{}""".format(
+{}""".format(
                 red_bold, red_bold, red_bold, red_bold, red_bold, red_bold,
-                red_bold, red_bold, red_bold, red_bold, reset
+                red_bold, red_bold, red_bold, reset
             )
 
-        elif self.os_id == 'fedora':
-            self.accent_color = blue
+        elif self.__os_id == 'fedora':
+            self.__accent_color = blue
             return """
 {}                ........                
 {}           ...''''''''''''...           
@@ -244,7 +243,7 @@ class Logo(object):
 {}.''''{},:{}dMMMMMMMW0o{},'''''''''''..        
 {} .''''''{};clooc;{}''''''''''...            
 {}    ''''''''''''''''''''
-{}{}""".format(
+{}""".format(
                 blue,
                 blue,
                 blue, white,     blue,
@@ -264,11 +263,11 @@ class Logo(object):
                 blue, blue_bold, white,     blue,
                 blue, white,     blue,
                 blue,
-                blue, reset
+                reset
             )
 
-        elif self.os_id == 'kde-neon':
-            self.accent_color = cyan
+        elif self.__os_id == 'kde-neon':
+            self.__accent_color = cyan
             return """
 {}              .,:cllllc:,.              
 {}         ..;cllllo{}dkkd{}ollllc;..         
@@ -289,7 +288,7 @@ class Logo(object):
 {}       'cll{}oxkkkkkkkkkkkkkkxo{}llc'       
 {}          .,clllll{}dkkd{}lllllc,.          
 {}              .,:cllllc:,.
-{}{}""".format(
+{}""".format(
                 green,
                 green, white, green,
                 green, white, green,
@@ -315,11 +314,11 @@ class Logo(object):
                 blue,  white, blue,
                 blue,  white, blue,
                 blue,
-                cyan, reset
+                reset
             )
 
-        elif self.os_id == 'linux-kernel':
-            self.accent_color = yellow
+        elif self.__os_id == 'linux-kernel':
+            self.__accent_color = yellow
             return """
 {}               .''''''''.               
 {}              .'''''''''''              
@@ -340,7 +339,7 @@ class Logo(object):
 {}kkkkkkkkkkkkkko{}:lodddoc{},''{}okkkkkkkkkk'  
 {}.;kkkkkkkkkkkkk{}.'''''':;..{}kkkkkkkkk'    
 {}   ''':xkkkkk'           'kkkkx'
-{}{}""".format(
+{}""".format(
                 blue,
                 blue,
                 white,  blue,   white,  blue,
@@ -360,11 +359,11 @@ class Logo(object):
                 yellow, white,  blue,   yellow,
                 yellow, blue,   yellow,
                 yellow,
-                yellow, reset
+                reset
             )
 
-        elif self.os_id == 'linux-mint':
-            self.accent_color = green
+        elif self.__os_id == 'linux-mint':
+            self.__accent_color = green
             return """
                                         
 {}dddddddddddddddddddddddddddol:'.        
@@ -385,7 +384,7 @@ class Logo(object):
 {}         .ckNMMMWNNXXXNNNNNNNNNNNNNMMMMM
 {}             .';cloooooooooooooooooooooo
                                         
-{}{}""".format(
+{}""".format(
                 white,
                 white,
                 white, green, white,
@@ -403,11 +402,11 @@ class Logo(object):
                 white, cyan,  white,
                 white,
                 white,
-                green, reset
+                reset
             )
 
-        elif self.os_id == 'lubuntu':
-            self.accent_color = blue
+        elif self.__os_id == 'lubuntu':
+            self.__accent_color = blue
             return """
 {}             .:d0XWMMWX0d:.             
 {}         .ck00{}OxdollllodxO{}00kc.         
@@ -428,7 +427,7 @@ class Logo(object):
 {}      .oK0xl{}cccccccccccccccc{}lOWKo.      
 {}         .cx0KOkddooooddxO00xc.         
 {}              ;dOXWMMWXOd;
-{}{}""".format(
+{}""".format(
                 white,
                 white, blue, white,
                 white, blue, white,
@@ -448,11 +447,11 @@ class Logo(object):
                 white, blue, white,
                 white,
                 white,
-                blue, reset
+                reset
             )
 
-        elif self.os_id == 'mageia':
-            self.accent_color = blue_bold
+        elif self.__os_id == 'mageia':
+            self.__accent_color = blue_bold
             return """
 {}               .°°.                    
 {}                °°.°°,                 
@@ -473,14 +472,13 @@ class Logo(object):
 {}          lNMOc'.    .;xNWk'           
 {}            'o0NMMWWMWKx'              
 {}                '''''                  
-{}{}""".format(
+{}""".format(
                 blue_bold, blue_bold, blue_bold, blue_bold, blue_bold, blue_bold, blue_bold, blue_bold,
-                white, white, white, white, white, white, white, white, white, white, white,
-                blue_bold, reset
+                white, white, white, white, white, white, white, white, white, white, white, reset
             )
 
-        elif self.os_id == 'manjaro':
-            self.accent_color = green
+        elif self.__os_id == 'manjaro':
+            self.__accent_color = green
             return """
                                         
    {} ......................{}  {}.......... {} 
@@ -501,7 +499,7 @@ class Logo(object):
    {}.MMMMMMMMMl{}  {}XMMMMMMMMK{}  {}oMMMMMMMMM.{} 
    {} ......... {}  {}..........{}  {} ......... {} 
 
-{}{}""".format(
+{}""".format(
                 green_back, reset, green_back, reset,
                 green_back, reset, green_back, reset,
                 green_back, reset, green_back, reset,
@@ -519,11 +517,11 @@ class Logo(object):
                 green_back, reset, green_back, reset, green_back, reset,
                 green_back, reset, green_back, reset, green_back, reset,
                 green_back, reset, green_back, reset, green_back, reset,
-                green, reset
+                reset
             )
 
-        elif self.os_id == 'mx':
-            self.accent_color = red
+        elif self.__os_id == 'mx':
+            self.__accent_color = red
             return """
 {}   ,xolllllllllllllllllllllllllllllllox'
 {}   M                                  .W
@@ -545,14 +543,14 @@ class Logo(object):
 {}   ,dlcccccccccccccccccccccccccccccccld'
 {}                                        
 {}
-{}{}""".format(
+{}""".format(
                 white_bold, white_bold, white_bold, white_bold, white_bold, white_bold, white_bold, white_bold,
                 white_bold, white_bold, white_bold, white_bold, white_bold, white_bold, white_bold, white_bold,
-                white_bold, white_bold, white_bold, white_bold, white_bold, reset
+                white_bold, white_bold, white_bold, white_bold, reset
             )
 
-        elif self.os_id == 'opensuse':
-            self.accent_color = green
+        elif self.__os_id == 'opensuse':
+            self.__accent_color = green
             return """
 {}             'lkKNWMMWNKkl'             
 {}         'oONMWKOxdoodxOKNMNOo'         
@@ -573,7 +571,7 @@ class Logo(object):
 {}      .oXMNkc'            'ckNMXo.      
 {}         .ckXMMN0OkxxkO0XMMXkc.         
 {}             .:x0NWMMWN0x:.
-{}{}""".format(
+{}""".format(
                 white_bold, white_bold, white_bold,
                 white_bold, green, white_bold,
                 white_bold, green, white_bold,
@@ -591,11 +589,11 @@ class Logo(object):
                 white_bold,
                 white_bold,
                 white_bold,
-                green, reset
+                reset
             )
 
-        elif self.os_id == 'solus':
-            self.accent_color = blue_dark
+        elif self.__os_id == 'solus':
+            self.__accent_color = blue_dark
             return """
 {}            .                           
 {}            ''............              
@@ -616,7 +614,7 @@ class Logo(object):
 {}       ,,,,,,,,,,,,,,,,,,,,,,,,,        
 {}          ,,,,,,,,,,,,,,,,,,,           
 {}               ,,,,,,,,,
-{}{}""".format(
+{}""".format(
                 blue_dark,
                 blue_dark,
                 blue_dark, white, blue_dark,
@@ -636,11 +634,11 @@ class Logo(object):
                 blue_bold,
                 blue_bold,
                 blue_bold,
-                blue, reset
+                reset
             )
 
-        elif self.os_id == 'ubuntu':
-            self.accent_color = red
+        elif self.__os_id == 'ubuntu':
+            self.__accent_color = red
             return """
 {}              ;d0XWMMWX0d;              
 {}         .ck0K0{}kxddddddxk{}0K0kc.         
@@ -661,7 +659,7 @@ class Logo(object):
 {}      .oKKk{}ollllllllllllllllo{}kKKo.      
 {}         .:x0K0k{}xxddddxx{}k0K0x:.         
 {}              ,oOXWMMWXOo,
-{}{}""".format(
+{}""".format(
                 white,
                 white, red, white,
                 white, red, white,
@@ -681,11 +679,11 @@ class Logo(object):
                 white, red, white,
                 white, red, white,
                 white,
-                red, reset
+                reset
             )
 
-        elif self.os_id == 'ubuntu-budgie':
-            self.accent_color = blue
+        elif self.__os_id == 'ubuntu-budgie':
+            self.__accent_color = blue
             return """
 {}             .:d0XWMMWX0d:.             
 {}         .lkXMMMMMMMMMMWXKXKkc.         
@@ -706,13 +704,13 @@ class Logo(object):
 {}      .lXMMMMMMMWo.          ,kXl.      
 {}         .cxXMMMMMMNOdolloxxxc.         
 {}              ;dOXWMMWXOd;
-{}{}""".format(
+{}""".format(
                 blue, blue, blue, blue, blue, blue, blue, blue, blue, blue, blue, blue, blue,
-                blue, blue, blue, blue, blue, blue, blue, reset
+                blue, blue, blue, blue, blue, blue, reset
             )
 
-        elif self.os_id == 'xubuntu':
-            self.accent_color = blue
+        elif self.__os_id == 'xubuntu':
+            self.__accent_color = blue
             return """
 {}              ..',,,,,,'..              
 {}          ..,;;;;;;;;;;;;;;,..          
@@ -733,7 +731,7 @@ class Logo(object):
 {}       .';;;;;;;;;;;;;;;;;;;;;;'.       
 {}          ..';;;;;;;;;;;;;;'..          
 {}               ..',,,,'..
-{}{}""".format(
+{}""".format(
                 blue,
                 blue,
                 blue,
@@ -753,7 +751,7 @@ class Logo(object):
                 blue,
                 blue,
                 blue,
-                blue, reset
+                reset
             )
 
 
