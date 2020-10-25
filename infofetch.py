@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import re
+import subprocess
 # import sys
 
 import osinfo
@@ -32,18 +33,30 @@ class InfoFetch(object):
         full_list = list()  # Uma lista de linhas completas para exibir com 'print' será gerada
         for line_logo, line_info in zip(logo_list, info_list):
             re_color = re.compile(r'\x1b[^m]*m')  # Remover caracteres de cores invisíveis da contagem
-            clean_line = re_color.sub('', line_logo)
-            if len(clean_line) < width_chars:  # Contar quantos caracteres faltam na linha da logo para 'width_chars'
-                missing_characters = width_chars - len(clean_line)
+            clean_line_logo = re_color.sub('', line_logo)
+            clean_line_info = re_color.sub('', line_info)
+            if len(clean_line_logo) < width_chars:  # Contar caracteres que faltam na linha da logo para 'width_chars'
+                missing_characters = width_chars - len(clean_line_logo)
                 line_logo = line_logo + ' '*missing_characters  # Acrescentar caracteres de espaços até preencher
 
-            full_list.append(line_logo + ' ' + line_info)  # Linha completa para o 'print', usando lista da logo e info
+            # Linha completa para o 'print', usando lista da logo e info
+            full_line = line_logo + ' ' + line_info
+
+            # Comparar tamanho da linha com o tamanho do terminal
+            full_line_clean = clean_line_logo + ' ' + clean_line_info
+            terminal_width = int(subprocess.getoutput('tput cols'))
+
+            if len(full_line_clean) > terminal_width:
+                remove = len(full_line_clean) - terminal_width
+                full_line = full_line[:-remove]
+
+            full_list.append(full_line)
 
         return full_list
 
     def __resolve_color_bar(self) -> None:
         # A barra de cor será acrescentada na menor lista
-        color_bar = '\033[41m  \033[42m  \033[43m  \033[44m  \033[45m  \033[46m  \033[47m  \033[0m'
+        color_bar = '\033[41m  \033[42m  \033[43m  \033[44m  \033[45m  \033[46m  \033[47m  \033[m'
         if len(self.__info_list) <= len(self.__logo_list):
             self.__info_list.append(color_bar)
         else:
@@ -51,8 +64,8 @@ class InfoFetch(object):
 
     def __get_system_info(self) -> list:
         # Criar lista com informações do sistema
-        accent_color = self.__os_logo.get_accent_color()
         os_info = osinfo.OsInfo()
+        accent_color = self.__os_logo.get_accent_color()
 
         # Cabeçalho
         head = accent_color + os_info.get_username() + '@' + os_info.get_hostname() + '\033[m'
