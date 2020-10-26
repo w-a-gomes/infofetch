@@ -19,7 +19,7 @@ class InfoFetch(object):
         self.__resolve_color_bar()
 
     @staticmethod
-    def __illusion_float(logo_list: list, info_list: list, width_chars) -> list:
+    def __illusion_float(logo_list: list, info_list: list, width_chars: int) -> list:
         # Garantir que a lista da esquerda (linhas da logo) fique com 'width_chars' (40) de tamanho.
         # Retorna uma lista em que cada linha é composta de 40 caracteres (width_chars) da linha da logo
         # e o resto da linha são informações do sistema.
@@ -196,12 +196,6 @@ class InfoFetch(object):
     def main(self) -> None:
         for item in self.__illusion_float(self.__logo_list, self.__info_list, 40):
             print(item)
-
-    def show_supported_logos(self) -> None:
-        pass
-
-    def list_supported_logos(self) -> None:
-        pass
 
 
 class Args(object):
