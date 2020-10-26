@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import re
 import subprocess
-# import sys
+import sys
 
 import osinfo
 import oslogos
@@ -197,7 +197,59 @@ class InfoFetch(object):
         for item in self.__illusion_float(self.__logo_list, self.__info_list, 40):
             print(item)
 
+    def show_supported_logos(self) -> None:
+        pass
+
+    def list_supported_logos(self) -> None:
+        pass
+
+
+class Args(object):
+    def __init__(self):
+        self.__exec_args()
+
+    @staticmethod
+    def __exec_args() -> None:
+        for arg in sys.argv:
+            if '--help' in arg:
+                help_text = (
+                    # '┌ --help ┐\n└-----┘↓\n'
+                    '--help ┐\n ┌─────┘\n'
+                    + 'Use:\n'
+                    + '  infofetch\n  infofetch [options]\n\n'
+                    + 'The available options are:\n'
+                    + 'OPTIONS                 DESCRIPTION\n'
+                    + '--help                  -Displays this help text\n'
+                    + '--list-supported-logos  -Displays a list with the name of the logos...\n'
+                    + '                         that are supported by this script\n'
+                    + '--show-supported-logos  -Displays/draws on the screen all logos that...\n'
+                    + '                         are supported by this script'
+                )
+                print(help_text)
+                print()
+                continue
+
+            elif '--list-supported-logos' in arg:
+                print('--list-supported-logos ┐\n ┌─────────────────────┘')
+                print(oslogos.Logo().get_list_of_supported_logos())
+                print()
+                continue
+
+            elif '--show-supported-logos' in arg:
+                print('--show-supported-logos ┐\n ┌─────────────────────┘')
+                for ansi_logo in oslogos.Logo().get_list_of_supported_logos():
+                    print(ansi_logo)
+                    print(oslogos.Logo(ansi_logo).get_colored_ansi_code())
+                print()
+                continue
+
 
 if __name__ == '__main__':
-    fetch = InfoFetch()
-    fetch.main()
+    del(sys.argv[0])
+
+    if sys.argv:
+        args = Args()
+
+    else:
+        fetch = InfoFetch()
+        fetch.main()
