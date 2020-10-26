@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 # https://github.com/w-a-gomes/systemutils
 
+
 class Color(object):
     """Create an object of type 'Color'
 
-    Obtém sequências de escape ANSI para cores no terminal.
+    Obtains ANSI escape strings for colors in the terminal.
     """
     def __init__(self):
         """Class constructor"""

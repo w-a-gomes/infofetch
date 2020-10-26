@@ -5,7 +5,10 @@ import re
 
 
 class OsInfo(object):
-    """Create an object of type 'OsInfo'"""
+    """Create an object of type 'OsInfo'
+
+    Gets information about the operating system.
+    """
     def __init__(self):
         """Class constructor"""
         self.__user = str()
@@ -47,6 +50,12 @@ class OsInfo(object):
         self.get_all_release_info()
 
     def get_user(self) -> str:
+        """The user name
+
+        The correct name that the user registered, not the 'username'.
+
+        :return: String containing the user name
+        """
         if self.__user:
             return self.__user
 
@@ -56,6 +65,12 @@ class OsInfo(object):
         return self.__user
 
     def get_username(self) -> str:
+        """The username
+
+        The username used to log in, not the correct or correctly formatted name.
+
+        :return: String containing username
+        """
         if self.__username:
             return self.__username
 
@@ -63,6 +78,12 @@ class OsInfo(object):
         return self.__username
 
     def get_hostname(self) -> str:
+        """The host name
+
+        The recognition name on the network.
+
+        :return: String containing the hostname
+        """
         if self.__hostname:
             return self.__hostname
 
@@ -80,6 +101,12 @@ class OsInfo(object):
         return self.__hostname
 
     def get_all_release_info(self) -> dict:
+        """cat /etc/os-release
+
+        All information from the '/etc/os-release' file in a dictionary.
+
+        :return: Dict containing information from the '/etc/os-release' file
+        """
         if self.__all_release_info:
             return self.__all_release_info
 
@@ -91,6 +118,12 @@ class OsInfo(object):
         return self.__all_release_info
 
     def get_pretty_name(self) -> str:
+        """Verbally formatted name
+
+        The pretty name in the '/etc/os-release' file.
+
+        :return: String containing pretty name
+        """
         if self.__pretty_name:
             return self.__pretty_name
 
@@ -100,6 +133,12 @@ class OsInfo(object):
         return self.__pretty_name
 
     def get_name(self) -> str:
+        """Operating system name
+
+        The commercially formatted name, which can contain uppercase letters and spaces.
+
+        :return: String containing the name of the operating system
+        """
         if self.__name:
             return self.__name
 
@@ -108,6 +147,12 @@ class OsInfo(object):
         return self.__name
 
     def get_name_id(self) -> str:
+        """Operating system identity
+
+        The identifier formatted name for code or database; usually in lowercase and without spaces.
+
+        :return: String containing the operating system ID
+        """
         if self.__name_id:
             return self.__name_id
 
@@ -119,6 +164,13 @@ class OsInfo(object):
         return self.__name_id
 
     def get_codename(self) -> str:
+        """Operating system codename
+
+        The code name is the commercial one, to easily identify the versions of the operating system.
+        Not all systems do.
+
+        :return: String containing the codename of the operating system
+        """
         if self.__codename:
             return self.__codename
 
@@ -130,6 +182,12 @@ class OsInfo(object):
         return self.__codename
 
     def get_version(self) -> str:
+        """Operating system version
+
+        The current version of the operating system.
+
+        :return: String containing the version of the operating system
+        """
         if self.__version:
             return self.__version
 
@@ -141,6 +199,12 @@ class OsInfo(object):
         return self.__version
 
     def get_kernel(self) -> str:
+        """Operating system kernel name
+
+        The current operating system kernel.
+
+        :return: String containing the kernel name
+        """
         if self.__kernel:
             return self.__kernel
 
@@ -148,6 +212,12 @@ class OsInfo(object):
         return self.__kernel
 
     def get_kernel_version(self) -> str:
+        """Operating system kernel version
+
+        The current kernel version of the operating system.
+
+        :return: String containing the kernel version
+        """
         if self.__kernel_version:
             return self.__kernel_version
 
@@ -158,6 +228,10 @@ class OsInfo(object):
         return self.__kernel_version
 
     def get_architecture(self) -> str:
+        """
+
+        :return:
+        """
         if self.__architecture:
             return self.__architecture
 
@@ -165,6 +239,10 @@ class OsInfo(object):
         return self.__architecture
 
     def get_motherboard(self) -> str:
+        """
+
+        :return:
+        """
         if self.__motherboard:
             return self.__motherboard
 
@@ -173,6 +251,10 @@ class OsInfo(object):
         return self.__motherboard
 
     def get_motherboard_version(self) -> str:
+        """
+
+        :return:
+        """
         if self.__motherboard_version:
             return self.__motherboard_version
 
@@ -181,6 +263,10 @@ class OsInfo(object):
         return self.__motherboard_version
 
     def get_cpu(self) -> str:
+        """
+
+        :return:
+        """
         if self.__cpu:
             return self.__cpu
         self.__cpu = subprocess.getoutput(
@@ -188,6 +274,10 @@ class OsInfo(object):
         return self.__cpu
 
     def get_gpu(self) -> str:
+        """
+
+        :return:
+        """
         if self.__gpu:
             return self.__gpu
 
@@ -225,6 +315,10 @@ class OsInfo(object):
         return self.__gpu
 
     def get_ram(self) -> str:
+        """
+
+        :return:
+        """
         if self.__ram:
             return self.__ram
 
@@ -232,6 +326,10 @@ class OsInfo(object):
         return self.__ram
 
     def get_ram_used(self) -> str:
+        """
+
+        :return:
+        """
         if self.__ram_used:
             return self.__ram_used
 
@@ -239,6 +337,10 @@ class OsInfo(object):
         return self.__ram_used
 
     def get_ram_free(self) -> str:
+        """
+
+        :return:
+        """
         if self.__ram_free:
             return self.__ram_free
 
@@ -246,6 +348,10 @@ class OsInfo(object):
         return self.__ram_free
 
     def get_swap(self) -> str:
+        """
+
+        :return:
+        """
         if self.__swap:
             return self.__swap
 
@@ -253,6 +359,10 @@ class OsInfo(object):
         return self.__swap
 
     def get_swap_used(self) -> str:
+        """
+
+        :return:
+        """
         if self.__swap_used:
             return self.__swap_used
 
@@ -260,6 +370,10 @@ class OsInfo(object):
         return self.__swap_used
 
     def get_swap_free(self) -> str:
+        """
+
+        :return:
+        """
         if self.__swap_free:
             return self.__swap_free
 
@@ -267,6 +381,10 @@ class OsInfo(object):
         return self.__swap_free
 
     def get_screen_resolution(self) -> str:
+        """
+
+        :return:
+        """
         if self.__screen_resolution:
             return self.__screen_resolution
 
@@ -278,6 +396,10 @@ class OsInfo(object):
         return self.__screen_resolution
 
     def get_uptime(self) -> str:
+        """
+
+        :return:
+        """
         if self.__uptime:
             return self.__uptime
 
@@ -290,6 +412,10 @@ class OsInfo(object):
         return self.__uptime
 
     def get_shell(self) -> str:
+        """
+
+        :return:
+        """
         if self.__shell:
             return self.__shell
 
@@ -297,6 +423,10 @@ class OsInfo(object):
         return self.__shell
 
     def get_desktop_environment(self) -> str:
+        """
+
+        :return:
+        """
         if self.__desktop_environment:
             return self.__desktop_environment
 
@@ -315,6 +445,10 @@ class OsInfo(object):
         return self.__desktop_environment
 
     def get_desktop_environment_version(self) -> str:
+        """
+
+        :return:
+        """
         if self.__desktop_environment_version:
             return self.__desktop_environment_version
 
@@ -346,6 +480,10 @@ class OsInfo(object):
         return self.__desktop_environment_version
 
     def get_window_manager(self) -> str:
+        """
+
+        :return:
+        """
         if self.__window_manager:
             return self.__window_manager
 
@@ -367,6 +505,10 @@ class OsInfo(object):
         return self.__window_manager
 
     def get_display_server(self) -> str:
+        """
+
+        :return:
+        """
         if self.__display_server:
             return self.__display_server
 
@@ -374,6 +516,10 @@ class OsInfo(object):
         return self.__display_server
 
     def get_package_manager(self) -> str:
+        """
+
+        :return:
+        """
         if self.__package_manager:
             return self.__package_manager
 
@@ -394,6 +540,10 @@ class OsInfo(object):
         return self.__package_manager
 
     def get_packages(self) -> str:
+        """
+
+        :return:
+        """
         if self.__packages:
             return self.__packages
 
@@ -402,6 +552,10 @@ class OsInfo(object):
         return self.__packages
 
     def get_flatpak_packages(self) -> str:
+        """
+
+        :return:
+        """
         if self.__flatpak_packages:
             return self.__flatpak_packages
 
@@ -413,6 +567,10 @@ class OsInfo(object):
         return self.__flatpak_packages
 
     def get_snap_packages(self) -> str:
+        """
+
+        :return:
+        """
         if self.__snap_packages:
             return self.__snap_packages
 
@@ -429,6 +587,10 @@ class OsInfo(object):
         return self.__snap_packages
 
     def get_font(self) -> str:
+        """
+
+        :return:
+        """
         if self.__font:
             return self.__font
 
@@ -436,6 +598,10 @@ class OsInfo(object):
         return self.__font
 
     def get_browser(self) -> str:
+        """
+
+        :return:
+        """
         if self.__browser:
             return self.__browser
 

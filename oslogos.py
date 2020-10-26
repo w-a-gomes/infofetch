@@ -4,7 +4,12 @@ import colors
 
 
 class Logo(object):
+    """Create an object of type 'Logo'
+
+    Create operating system logos using ANSI code.
+    """
     def __init__(self, os_name_id: str = 'linux-kernel'):
+        """Class constructor"""
         self.__os_id = os_name_id
         self.__accent_color = '\033[32m'
         self.__list_of_supported_logos = [
@@ -21,21 +26,51 @@ class Logo(object):
             'xubuntu',
         ]
 
-    def set_os_name_id(self, os_name_id: str = None):
+    def set_os_name_id(self, os_name_id: str = None) -> None:
+        """Configures the operating system identity
+
+        Change the identity of the operating system to change the logo.
+
+        :param os_name_id:
+        """
         if os_name_id:
             self.__os_id = os_name_id
 
     def get_list_of_supported_logos(self) -> list:
+        """Get a list of the logos supported by this script
+
+        Logically, the name of the logo will be the name of the operating system.
+
+        :return: List of the logos supported by this script
+        """
         return self.__list_of_supported_logos
 
     def get_colored_ansi_code_as_list(self) -> list:
+        """Gets the logo in list format
+
+        Each item on the list is a line from the logo.
+
+        :return: List with the logo lines on each item
+        """
         return self.get_colored_ansi_code().split('\n')
 
-    def get_accent_color(self):
+    def get_accent_color(self) -> str:
+        """Gets the accent color of the logo
+
+        Use to decorate.
+
+        :return: String with the accent color of the logo
+        """
         return self.__accent_color
 
     # noinspection SpellCheckingInspection
     def get_colored_ansi_code(self) -> str:
+        """Gets the logo as ANSI code
+
+        The logo will be automatically chosen by looking at the name of the operating system.
+
+        :return: String with logo as ANSI code
+        """
         color = colors.Color()
         blue = color.get_style(color='blue')
         blue_dark = color.get_style(color='blue', style='dark')

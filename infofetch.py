@@ -8,7 +8,9 @@ import oslogos
 
 
 class InfoFetch(object):
+    """Create an object of type 'InfoFetch'"""
     def __init__(self, os_name_id: str = None):
+        """Class constructor"""
         # Configura a identidade do sistema operacional
         self.__os_name_id = os_name_id if os_name_id else osinfo.OsInfo().get_name_id()
         self.__os_logo = oslogos.Logo(os_name_id=self.__os_name_id)
@@ -194,20 +196,29 @@ class InfoFetch(object):
         return system_info_list
 
     def main(self) -> None:
+        """Shows system information
+
+        Displays the system logo and system information.
+        """
         for item in self.__illusion_float(self.__logo_list, self.__info_list, 40):
             print(item)
 
 
 class Args(object):
+    """Create an object of type 'Args'"""
     def __init__(self):
+        """Class constructor
+
+        Handles and executes the arguments that have been passed.
+        """
         self.__exec_args()
 
     @staticmethod
     def __exec_args() -> None:
+        # Verifica os argumentos e os exibe
         for arg in sys.argv:
             if '--help' in arg:
                 help_text = (
-                    # '┌ --help ┐\n└-----┘↓\n'
                     '--help ┐\n ┌─────┘\n'
                     + 'Use:\n'
                     + '  infofetch\n  infofetch [options]\n\n'
