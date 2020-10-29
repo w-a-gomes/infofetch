@@ -86,26 +86,26 @@ class Logo(object):
         reset = color.reset_style()
 
         default_logo = """
-                {}               .''''''''.               
-                {}              .'''''''''''              
-                {}              ,MN{}'''{}NMN:{}''.             
-                {}              l{}M{}N{}';'{}N{}M{}N{};'''             
-                {}              :{}xXMMMMXxx{}'''             
-                {}             .o{}xMMMMMXx'{},''.            
-                {}             .k{}M{}'xNNK'{}MMd{}'''.           
-                {}           ..{}dMMMMMMMMMMMl{}''''.         
-                {}          .,{}OMMMMMMMMMMMMMd{}'''''.       
-                {}        .'c{}NMMMMMMMMMMMMMMM0{},''''.      
-                {}       .'o{}MMMMMMMMMMMMMMMMMMK{}''''''.    
-                {}      '',{}WMMMMMMMMMMMMMMMMMMM{}:''''''    
-                {}     .::,x{}WMMMMMMMMMMMMMMMMMMc{}'''''.    
-                {}   .:kKKk{}l,d{}NMMMMMMMMMMMMMWO{}xK{}'''':{}kx   
-                {}dkkkkkkkkkx{};'c0{}MMMMMMMMMMMW{}kkkkxxxkkk:  
-                {}kkkkkkkkkkkkd{}:cX{}MMMMMMMMNko{}kkkkkkkkkkkk;
-                {}kkkkkkkkkkkkkko{}:lodddoc{},''{}okkkkkkkkkk'  
-                {}.;kkkkkkkkkkkkk{}.'''''':;..{}kkkkkkkkk'    
-                {}   ''':xkkkkk'           'kkkkx'
-                {}""".format(
+{}               .''''''''.               
+{}              .'''''''''''              
+{}              ,MN{}'''{}NMN:{}''.             
+{}              l{}M{}N{}';'{}N{}M{}N{};'''             
+{}              :{}xXMMMMXxx{}'''             
+{}             .o{}xMMMMMXx'{},''.            
+{}             .k{}M{}'xNNK'{}MMd{}'''.           
+{}           ..{}dMMMMMMMMMMMl{}''''.         
+{}          .,{}OMMMMMMMMMMMMMd{}'''''.       
+{}        .'c{}NMMMMMMMMMMMMMMM0{},''''.      
+{}       .'o{}MMMMMMMMMMMMMMMMMMK{}''''''.    
+{}      '',{}WMMMMMMMMMMMMMMMMMMM{}:''''''    
+{}     .::,x{}WMMMMMMMMMMMMMMMMMMc{}'''''.    
+{}   .:kKKk{}l,d{}NMMMMMMMMMMMMMWO{}xK{}'''':{}kx   
+{}dkkkkkkkkkx{};'c0{}MMMMMMMMMMMW{}kkkkxxxkkk:  
+{}kkkkkkkkkkkkd{}:cX{}MMMMMMMMNko{}kkkkkkkkkkkk;
+{}kkkkkkkkkkkkkko{}:lodddoc{},''{}okkkkkkkkkk'  
+{}.;kkkkkkkkkkkkk{}.'''''':;..{}kkkkkkkkk'    
+{}   ''':xkkkkk'           'kkkkx'
+{}""".format(
             blue,
             blue,
             white, blue, white, blue,
