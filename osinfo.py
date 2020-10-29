@@ -559,7 +559,6 @@ class OsInfo(object):
         if self.__flatpak_packages:
             return self.__flatpak_packages
 
-        self.__flatpak_packages = '0'
         number = int(subprocess.getoutput('flatpak list | wc -l').split()[-1])
         if number > 0:
             self.__flatpak_packages = str(number)
@@ -573,8 +572,6 @@ class OsInfo(object):
         """
         if self.__snap_packages:
             return self.__snap_packages
-
-        self.__snap_packages = '0'
 
         # Remove cabeçalho com: grep -v "^Name"
         # number = int(subprocess.getoutput('snap list | grep -v "^Name" | wc -l').split()[-1])
