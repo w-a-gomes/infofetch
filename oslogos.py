@@ -344,7 +344,7 @@ class Logo(object):
                 reset
             )
 
-        elif self.__os_id == 'kde-neon':
+        elif self.__os_id == 'kde-neon' or self.__os_id == 'neon':
             self.__accent_color = cyan
             return """
 {}              .,:cllllc:,.              
