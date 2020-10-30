@@ -128,7 +128,7 @@ class Logo(object):
             reset
         )
 
-        if self.__os_id == 'arch-linux':
+        if self.__os_id == 'arch-linux' or self.__os_id == 'arch':
             self.__accent_color = blue
             return """
 {}                   ..                   
@@ -227,7 +227,7 @@ class Logo(object):
                 reset
             )
 
-        elif self.__os_id == 'elementary-os':
+        elif self.__os_id == 'elementary-os' or self.__os_id == 'elementary':
             self.__accent_color = blue
             return """
 {}              .',::ccc:,'.              
@@ -272,7 +272,7 @@ class Logo(object):
                 reset
             )
 
-        elif self.__os_id == 'endless':
+        elif self.__os_id == 'endless' or self.__os_id == 'endless-os':
             self.__accent_color = red_bold
             return """
                                         
@@ -399,7 +399,7 @@ class Logo(object):
             self.__accent_color = yellow
             return default_logo
 
-        elif self.__os_id == 'linux-mint':
+        elif self.__os_id == 'linux-mint' or self.__os_id == 'mint':
             self.__accent_color = green
             return """
                                         
@@ -557,7 +557,7 @@ class Logo(object):
                 reset
             )
 
-        elif self.__os_id == 'mx':
+        elif self.__os_id == 'mx' or self.__os_id == 'mx-linux':
             self.__accent_color = red
             return """
 {}   ,xolllllllllllllllllllllllllllllllox'
