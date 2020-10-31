@@ -719,7 +719,7 @@ class Logo(object):
                 reset
             )
 
-        elif self.__os_id == 'ubuntu-budgie':
+        elif self.__os_id == 'ubuntubudgie':
             self.__accent_color = blue
             return """
 {}             .:d0XWMMWX0d:.             

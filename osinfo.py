@@ -115,6 +115,36 @@ class OsInfo(object):
             items = item_release.split('=')
             self.__all_release_info[items[0]] = items[1].strip('"').strip("'")
 
+        # HACK: Identify some known distributions that do not configure version information as they should
+        hack_name = False
+        name = str()
+        name_id = str()
+
+        if 'ubuntu' in self.__all_release_info['NAME'].lower():
+            # Lubuntu
+            if 'openbox' in subprocess.getoutput('ls /usr/share/lubuntu/'):
+                hack_name = True
+                name = 'Lubuntu'
+                name_id = 'lubuntu'
+
+            # ubuntu Budgie
+            elif 'Budgie Welcome' in subprocess.getoutput('ubuntu-budgie-welcome.budgie-welcome --version'):
+                hack_name = True
+                name = 'Ubuntu Budgie'
+                name_id = 'ubuntubudgie'
+
+            # Xubuntu
+            elif 'applications' in subprocess.getoutput('ls /usr/share/xubuntu/'):
+                hack_name = True
+                name = 'Xubuntu'
+                name_id = 'xubuntu'
+
+        if hack_name:
+            self.__all_release_info['NAME'] = name
+            self.__all_release_info['ID'] = name_id
+            if 'PRETTY_NAME' in self.__all_release_info:
+                self.__all_release_info['PRETTY_NAME'] = self.__all_release_info['PRETTY_NAME'].replace('Ubuntu', name)
+
         return self.__all_release_info
 
     def get_pretty_name(self) -> str:
