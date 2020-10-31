@@ -344,7 +344,7 @@ class Logo(object):
                 reset
             )
 
-        elif self.__os_id == 'kde-neon' or self.__os_id == 'neon':
+        elif self.__os_id == 'neon':
             self.__accent_color = cyan
             return """
 {}              .,:cllllc:,.              
@@ -399,7 +399,7 @@ class Logo(object):
             self.__accent_color = yellow
             return default_logo
 
-        elif self.__os_id == 'linux-mint' or self.__os_id == 'mint':
+        elif self.__os_id == 'linuxmint':
             self.__accent_color = green
             return """
                                         
