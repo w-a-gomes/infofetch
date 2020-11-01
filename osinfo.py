@@ -352,7 +352,7 @@ class OsInfo(object):
         if self.__ram:
             return self.__ram
 
-        self.__ram = subprocess.getoutput("free -h | grep Mem | awk '{print $2}'")
+        self.__ram = subprocess.getoutput("free -h | grep Mem | awk '{print $2}'").replace(',', '.')
         return self.__ram
 
     def get_ram_used(self) -> str:
@@ -363,7 +363,7 @@ class OsInfo(object):
         if self.__ram_used:
             return self.__ram_used
 
-        self.__ram_used = subprocess.getoutput("free -h | grep Mem | awk '{print $3}'")
+        self.__ram_used = subprocess.getoutput("free -h | grep Mem | awk '{print $3}'").replace(',', '.')
         return self.__ram_used
 
     def get_ram_free(self) -> str:
@@ -374,7 +374,7 @@ class OsInfo(object):
         if self.__ram_free:
             return self.__ram_free
 
-        self.__ram_free = subprocess.getoutput("free -h | grep Mem | awk '{print $4}'")
+        self.__ram_free = subprocess.getoutput("free -h | grep Mem | awk '{print $4}'").replace(',', '.')
         return self.__ram_free
 
     def get_swap(self) -> str:
@@ -385,7 +385,7 @@ class OsInfo(object):
         if self.__swap:
             return self.__swap
 
-        self.__swap = subprocess.getoutput("free -h | grep Swap | awk '{print $2}'")
+        self.__swap = subprocess.getoutput("free -h | grep Swap | awk '{print $2}'").replace(',', '.')
         return self.__swap
 
     def get_swap_used(self) -> str:
@@ -396,7 +396,7 @@ class OsInfo(object):
         if self.__swap_used:
             return self.__swap_used
 
-        self.__swap_used = subprocess.getoutput("free -h | grep Swap | awk '{print $3}'")
+        self.__swap_used = subprocess.getoutput("free -h | grep Swap | awk '{print $3}'").replace(',', '.')
         return self.__swap_used
 
     def get_swap_free(self) -> str:
@@ -407,7 +407,7 @@ class OsInfo(object):
         if self.__swap_free:
             return self.__swap_free
 
-        self.__swap_free = subprocess.getoutput("free -h | grep Swap | awk '{print $4}'")
+        self.__swap_free = subprocess.getoutput("free -h | grep Swap | awk '{print $4}'").replace(',', '.')
         return self.__swap_free
 
     def get_screen_resolution(self) -> str:
@@ -483,17 +483,21 @@ class OsInfo(object):
             return self.__desktop_environment_version
 
         cmd_version = {
-            'cinnamon': 'cinnamon --version', 'kde': 'plasmashell --version',
-            'budgie': 'budgie-desktop --version', 'gnome': 'gnome-shell --version',
-            'xfce': 'xfce4-about -V | grep xfce4-about', 'lxqt': 'lxqt-about -v | grep liblxqt'}
-
+            # 'budgie': "budgie-desktop --version | awk '{print $2}'",
+            'cinnamon': "cinnamon --version | awk '{print $2}'",
+            # deepin
+            'gnome': "gnome-shell --version | awk '{print $3}'",
+            'kde': "plasmashell --version | awk '{print $2}'",
+            # lxde
+            'lxqt': "lxqt-about -v | grep liblxqt | awk '{print $2}'",
+            # pantheon elementary
+            'xfce': "xfce4-about -V | grep xfce4-about | awk '{print $2}'",
+        }
+        de = self.get_desktop_environment().lower()
         desktop_environment_version = str()
         for cmd_version_key, cmd_version_value in cmd_version.items():
-            if cmd_version_key in self.get_desktop_environment().lower():
+            if cmd_version_key in de:
                 desktop_environment_version = subprocess.getoutput(cmd_version_value)
-                regex_version = re.findall(r'.+ (\d+.+)', desktop_environment_version)
-                if regex_version:
-                    desktop_environment_version = regex_version[0]
                 break
 
         # Limpar
@@ -502,10 +506,11 @@ class OsInfo(object):
             self.__desktop_environment_version = desktop_environment_version.replace(cleaning_item, '')
 
         # Customizar
-        error = ['bash: ', '/bin/sh: ', 'xfce4-about: ']
+        error = ['bash: ', '/bin/sh: ']
         for item_error in error:
             if item_error in self.__desktop_environment_version.lower():
                 self.__desktop_environment_version = ''
+                break
 
         return self.__desktop_environment_version
 

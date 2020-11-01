@@ -95,7 +95,7 @@ class InfoFetch(object):
         motherboard_version_ = os_info.get_motherboard_version()
         motherboard = 'unknown'
         if motherboard_ and motherboard_version_:
-            motherboard = '{}, version:{}'.format(motherboard_, motherboard_version_)
+            motherboard = '{}, version {}'.format(motherboard_, motherboard_version_)
         elif motherboard_ and not motherboard_version_:
             motherboard = motherboard_
 
