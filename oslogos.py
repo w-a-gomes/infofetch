@@ -61,6 +61,7 @@ class Logo(object):
 
         :return: String with the accent color of the logo
         """
+        self.get_colored_ansi_code()
         return self.__accent_color
 
     # noinspection SpellCheckingInspection

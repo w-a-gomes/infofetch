@@ -12,11 +12,13 @@ class InfoFetch(object):
     def __init__(self, os_name_id: str = None):
         """Class constructor"""
         # Configura a identidade do sistema operacional
-        self.__os_name_id = os_name_id if os_name_id else osinfo.OsInfo().get_name_id()
+        self.__os_info = osinfo.OsInfo()
+        self.__os_name_id = os_name_id if os_name_id else self.__os_info.get_name_id()
         self.__os_logo = oslogos.Logo(os_name_id=self.__os_name_id)
         # Obtém as lista das linhas da logo e a lista das informações do sistema
-        self.__logo_list = self.__os_logo.get_colored_ansi_code_as_list()
-        self.__info_list = self.__get_system_info()
+        self.accent_color = self.__os_logo.get_accent_color()
+        self.logo_as_list = self.__os_logo.get_colored_ansi_code_as_list()
+        self.info_list = self.__get_system_info()
         # A barra de cor será acrescentada na menor lista
         self.__resolve_color_bar()
 
@@ -59,90 +61,89 @@ class InfoFetch(object):
     def __resolve_color_bar(self) -> None:
         # A barra de cor será acrescentada na menor lista
         color_bar = '\033[41m  \033[42m  \033[43m  \033[44m  \033[45m  \033[46m  \033[47m  \033[m'
-        if len(self.__info_list) <= len(self.__logo_list):
-            self.__info_list.append(color_bar)
+        if len(self.info_list) <= len(self.logo_as_list):
+            self.info_list.append(color_bar)
         else:
-            self.__logo_list.append(color_bar)
+            self.logo_as_list.append(color_bar)
 
-    def __get_system_info(self) -> list:
-        # Criar lista com informações do sistema
-        os_info = osinfo.OsInfo()
-        accent_color = self.__os_logo.get_accent_color()
+    def get_header(self) -> str:
+        return self.accent_color + self.__os_info.get_username() + '@' + self.__os_info.get_hostname() + '\033[m'
 
-        # Cabeçalho
-        head = accent_color + os_info.get_username() + '@' + os_info.get_hostname() + '\033[m'
-        len_head = len(head) - len(accent_color) - len('\033[m')
-        head_base = '\033[m' + '-'*len_head
+    def get_header_decoration(self, header: str) -> str:
+        len_header = len(header) - len(self.accent_color) - len('\033[m')
+        return '\033[m' + '-' * len_header
 
-        # Nome do Sistema
-        os_pretty_name_ = os_info.get_pretty_name()
-        os_name_ = os_info.get_name()
-        name = os_pretty_name_ if os_pretty_name_ else os_name_ + '' + os_info.get_version()
-        os_name = name + ' ' + os_info.get_codename()
+    def get_os_name(self) -> str:
+        os_pretty_name_ = self.__os_info.get_pretty_name()
+        os_name_ = self.__os_info.get_name()
+        name = os_pretty_name_ if os_pretty_name_ else os_name_ + '' + self.__os_info.get_version()
+        os_name = name + ' ' + self.__os_info.get_codename()
         if not os_name and not os_pretty_name_:
-            os_name = 'unknown'
+            return 'unknown'
+        return os_name
 
-        # Arquitetura
-        architecture_ = os_info.get_architecture()
-        architecture = architecture_ + ' bits' if architecture_ else 'unknown'
+    def get_architecture(self) -> str:
+        architecture = self.__os_info.get_architecture()
+        return architecture + ' bits' if architecture else 'unknown'
 
-        # Kernel
-        kernel_ = os_info.get_kernel()
-        kernel = kernel_ + ' ' + os_info.get_kernel_version() if kernel_ else 'unknown'
+    def get_kernel(self) -> str:
+        kernel = self.__os_info.get_kernel()
+        return kernel + ' ' + self.__os_info.get_kernel_version() if kernel else 'unknown'
 
-        # Placa mãe
-        motherboard_ = os_info.get_motherboard()
-        motherboard_version_ = os_info.get_motherboard_version()
-        motherboard = 'unknown'
-        if motherboard_ and motherboard_version_:
-            motherboard = '{}, version {}'.format(motherboard_, motherboard_version_)
-        elif motherboard_ and not motherboard_version_:
-            motherboard = motherboard_
+    def get_motherboard(self) -> str:
+        motherboard = self.__os_info.get_motherboard()
+        motherboard_version = self.__os_info.get_motherboard_version()
+        if motherboard and motherboard_version:
+            return '{}, version {}'.format(motherboard, motherboard_version)
+        elif motherboard and not motherboard_version:
+            return motherboard
+        else:
+            return 'unknown'
 
-        # CPU
-        cpu_ = os_info.get_cpu()
-        cpu = cpu_ if cpu_ else 'unknown'
+    def get_cpu(self) -> str:
+        cpu = self.__os_info.get_cpu()
+        return cpu if cpu else 'unknown'
 
-        # GPU
-        gpu_ = os_info.get_gpu()
-        gpu = gpu_ if gpu_ else 'unknown'
+    def get_gpu(self) -> str:
+        gpu = self.__os_info.get_gpu()
+        return gpu if gpu else 'unknown'
 
-        # RAM
-        ram_ = os_info.get_ram()
-        ram = '{}, used {}, free {}'.format(
-            ram_, os_info.get_ram_used(), os_info.get_ram_free()) if ram_ else 'unknown'
+    def get_ram(self) -> str:
+        ram = self.__os_info.get_ram()
+        return '{}, used {}, free {}'.format(
+            ram, self.__os_info.get_ram_used(), self.__os_info.get_ram_free()) if ram else 'unknown'
 
-        # Swap
-        swap_ = os_info.get_swap()
-        swap = '{}, used {}, free {}'.format(
-            swap_, os_info.get_swap_used(), os_info.get_swap_free()) if swap_ else 'unknown'
+    def get_swap(self) -> str:
+        swap = self.__os_info.get_swap()
+        return '{}, used {}, free {}'.format(
+            swap, self.__os_info.get_swap_used(), self.__os_info.get_swap_free()) if swap else 'unknown'
 
-        # Resolução
-        resolution_ = os_info.get_screen_resolution()
-        resolution = resolution_ if resolution_ else 'unknown'
+    def get_resolution(self) -> str:
+        resolution = self.__os_info.get_screen_resolution()
+        return resolution if resolution else 'unknown'
 
-        # Uptime
-        uptime_ = os_info.get_uptime()
-        uptime = uptime_ if uptime_ else 'unknown'
+    def get_uptime(self) -> str:
+        uptime = self.__os_info.get_uptime()
+        return uptime if uptime else 'unknown'
 
-        # Shell
-        shell_ = os_info.get_shell()
-        shell = shell_ if shell_ else 'unknown'
+    def get_shell(self) -> str:
+        shell = self.__os_info.get_shell()
+        return shell if shell else 'unknown'
 
-        # Interface gráfica
-        de_ = os_info.get_desktop_environment()
-        de = '{} {}'.format(
-            de_, os_info.get_desktop_environment_version()) if de_ else 'unknown'
+    def get_desktop_environment(self) -> str:
+        de = self.__os_info.get_desktop_environment()
+        return '{} {}'.format(
+            de, self.__os_info.get_desktop_environment_version()) if de else 'unknown'
 
-        # Gerenciador de janelas
-        wm_ = os_info.get_window_manager()
-        wm = wm_ if wm_ else 'unknown'
+    def get_window_manager(self) -> str:
+        wm = self.__os_info.get_window_manager()
+        return wm if wm else 'unknown'
 
-        # Pacotes
-        native_packages = os_info.get_packages()
-        native_packages_manager = os_info.get_package_manager()
-        flatpak_packages = os_info.get_flatpak_packages()
-        snap_packages = os_info.get_snap_packages()
+    def get_packages(self) -> str:
+        native_packages = self.__os_info.get_packages()
+        native_packages_manager = self.__os_info.get_package_manager()
+        flatpak_packages = self.__os_info.get_flatpak_packages()
+        snap_packages = self.__os_info.get_snap_packages()
         # Pacotes - variáveis de uso final
         total_packages = native_packages
         packages_details = ' - ' + native_packages_manager
@@ -159,33 +160,37 @@ class InfoFetch(object):
         if not native_packages:
             packages = 'unknown'
 
-        # Fonte
-        font_ = os_info.get_font()
-        font = font_ if font_ else 'unknown'
+        return packages
 
-        # Navegador
-        browser_ = os_info.get_browser()
-        browser = browser_ if browser_ else 'unknown'
+    def get_font(self) -> str:
+        font = self.__os_info.get_font()
+        return font if font else 'unknown'
 
+    def get_browser(self) -> str:
+        browser = self.__os_info.get_browser()
+        return browser if browser else 'unknown'
+
+    def __get_system_info(self) -> list:
+        header = self.get_header()
         system_info_list = [
-            head,
-            head_base,
-            accent_color + 'OS: ' + '\033[m' + os_name,
-            accent_color + 'Architecture: ' + '\033[m' + architecture,
-            accent_color + 'Kernel: ' + '\033[m' + kernel,
-            accent_color + 'Board: ' + '\033[m' + motherboard,
-            accent_color + 'CPU: ' + '\033[m' + cpu,
-            accent_color + 'GPU: ' + '\033[m' + gpu,
-            accent_color + 'RAM: ' + '\033[m' + ram,
-            accent_color + 'Swap: ' + '\033[m' + swap,
-            accent_color + 'Resolution: ' + '\033[m' + resolution,
-            accent_color + 'Uptime: ' + '\033[m' + uptime,
-            accent_color + 'Shell: ' + '\033[m' + shell,
-            accent_color + 'DE: ' + '\033[m' + de,
-            accent_color + 'WM: ' + '\033[m' + wm,
-            accent_color + 'Packages: ' + '\033[m' + packages,
-            accent_color + 'Font: ' + '\033[m' + font,
-            accent_color + 'Default browser: ' + '\033[m' + browser,
+            header,
+            self.get_header_decoration(header),
+            self.accent_color + 'OS: ' + '\033[m' + self.get_os_name(),
+            self.accent_color + 'Architecture: ' + '\033[m' + self.get_architecture(),
+            self.accent_color + 'Kernel: ' + '\033[m' + self.get_kernel(),
+            self.accent_color + 'Board: ' + '\033[m' + self.get_motherboard(),
+            self.accent_color + 'CPU: ' + '\033[m' + self.get_cpu(),
+            self.accent_color + 'GPU: ' + '\033[m' + self.get_gpu(),
+            self.accent_color + 'RAM: ' + '\033[m' + self.get_ram(),
+            self.accent_color + 'Swap: ' + '\033[m' + self.get_swap(),
+            self.accent_color + 'Resolution: ' + '\033[m' + self.get_resolution(),
+            self.accent_color + 'Uptime: ' + '\033[m' + self.get_uptime(),
+            self.accent_color + 'Shell: ' + '\033[m' + self.get_shell(),
+            self.accent_color + 'DE: ' + '\033[m' + self.get_desktop_environment(),
+            self.accent_color + 'WM: ' + '\033[m' + self.get_window_manager(),
+            self.accent_color + 'Packages: ' + '\033[m' + self.get_packages(),
+            self.accent_color + 'Font: ' + '\033[m' + self.get_font(),
+            self.accent_color + 'Default browser: ' + '\033[m' + self.get_browser(),
         ]
 
         # Remover informação indisponível
@@ -200,7 +205,7 @@ class InfoFetch(object):
 
         Displays the system logo and system information.
         """
-        for item in self.__illusion_float(self.__logo_list, self.__info_list, 40):
+        for item in self.__illusion_float(self.logo_as_list, self.info_list, 40):
             print(item)
 
 
@@ -227,7 +232,7 @@ class Args(object):
                     + '--help                  -Displays this help text\n'
                     + '--list-supported-logos  -Displays a list with the name of the logos...\n'
                     + '                         that are supported by this script\n'
-                    + '--show-supported-logos  -Displays/draws on the screen all logos that...\n'
+                    + '--show-all-logos        -Displays/draws on the screen all logos that...\n'
                     + '                         are supported by this script'
                 )
                 print(help_text)
@@ -240,8 +245,8 @@ class Args(object):
                 print()
                 continue
 
-            elif '--show-supported-logos' in arg:
-                print('--show-supported-logos ┐\n ┌─────────────────────┘')
+            elif '--show-all-logos' in arg:
+                print('--show-all-logos ┐\n ┌───────────────┘')
                 for ansi_logo in oslogos.Logo().get_list_of_supported_logos():
                     print(ansi_logo)
                     print(oslogos.Logo(ansi_logo).get_colored_ansi_code())
