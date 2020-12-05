@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # https://github.com/w-a-gomes/systemutils
 import colors
+import osinfo
 
 
 class Logo(object):
@@ -8,33 +9,44 @@ class Logo(object):
 
     Create operating system logos using ANSI code.
     """
-    def __init__(self, os_name_id: str = 'linux-kernel'):
+    def __init__(self, os_name_id: str = 'linux'):
         """Class constructor"""
         self.__os_id = os_name_id
-        self.__accent_color = '\033[32m'
-        self.__list_of_supported_logos = [
+        self.__accent_color = str()
+        self.__colored_ansi_code = self.get_colored_ansi_code()
+        self.__list_of_supported_logos = self.__supported_logos_list()
+        self.__automatically_set_the_name_id()
+
+    def __automatically_set_the_name_id(self) -> None:
+        if self.__os_id == 'linux':
+            name_id = osinfo.OsInfo().get_name_id()
+            if name_id in self.__list_of_supported_logos:
+                self.__os_id = name_id
+
+    @staticmethod
+    def __supported_logos_list() -> list:
+        return [
             'arch-linux',
             'debian', 'deepin',
-            'elementary-os', 'endless',
+            'elementary-os', 'endless-os',
             'fedora',
             'kde-neon',
-            'linux-kernel', 'linux-mint', 'lubuntu',
-            'mageia', 'manjaro', 'mx',
+            'linux', 'linux-mint', 'lubuntu',
+            'mageia', 'manjaro', 'mx-linux',
             'opensuse',
             'solus',
             'ubuntu', 'ubuntu-budgie',
             'xubuntu',
         ]
 
-    def set_os_name_id(self, os_name_id: str = None) -> None:
+    def set_os_name_id(self, os_name_id: str) -> None:
         """Configures the operating system identity
 
         Change the identity of the operating system to change the logo.
 
         :param os_name_id:
         """
-        if os_name_id:
-            self.__os_id = os_name_id
+        self.__os_id = os_name_id
 
     def get_list_of_supported_logos(self) -> list:
         """Get a list of the logos supported by this script
@@ -52,7 +64,7 @@ class Logo(object):
 
         :return: List with the logo lines on each item
         """
-        return self.get_colored_ansi_code().split('\n')
+        return self.__colored_ansi_code.split('\n')
 
     def get_accent_color(self) -> str:
         """Gets the accent color of the logo
@@ -61,7 +73,6 @@ class Logo(object):
 
         :return: String with the accent color of the logo
         """
-        self.get_colored_ansi_code()
         return self.__accent_color
 
     # noinspection SpellCheckingInspection
@@ -85,49 +96,6 @@ class Logo(object):
         cyan = color.get_style(color='cyan')
         yellow = color.get_style(color='yellow')
         reset = color.reset_style()
-
-        default_logo = """
-{}               .''''''''.               
-{}              .'''''''''''              
-{}              ,MN{}'''{}NMN:{}''.             
-{}              l{}M{}N{}';'{}N{}M{}N{};'''             
-{}              :{}xXMMMMXxx{}'''             
-{}             .o{}xMMMMMXx'{},''.            
-{}             .k{}M{}'xNNK'{}MMd{}'''.           
-{}           ..{}dMMMMMMMMMMMl{}''''.         
-{}          .,{}OMMMMMMMMMMMMMd{}'''''.       
-{}        .'c{}NMMMMMMMMMMMMMMM0{},''''.      
-{}       .'o{}MMMMMMMMMMMMMMMMMMK{}''''''.    
-{}      '',{}WMMMMMMMMMMMMMMMMMMM{}:''''''    
-{}     .::,x{}WMMMMMMMMMMMMMMMMMMc{}'''''.    
-{}   .:kKKk{}l,d{}NMMMMMMMMMMMMMWO{}xK{}'''':{}kx   
-{}dkkkkkkkkkx{};'c0{}MMMMMMMMMMMW{}kkkkxxxkkk:  
-{}kkkkkkkkkkkkd{}:cX{}MMMMMMMMNko{}kkkkkkkkkkkk;
-{}kkkkkkkkkkkkkko{}:lodddoc{},''{}okkkkkkkkkk'  
-{}.;kkkkkkkkkkkkk{}.'''''':;..{}kkkkkkkkk'    
-{}   ''':xkkkkk'           'kkkkx'
-{}""".format(
-            blue,
-            blue,
-            white, blue, white, blue,
-            white, blue, white, blue, white, blue, white, blue,
-            blue, yellow, blue,
-            blue, yellow, blue,
-            blue, white, yellow, white, blue,
-            blue, white, blue,
-            blue, white, blue,
-            blue, white, blue,
-            blue, white, blue,
-            blue, white, blue,
-            blue, white, blue,
-            yellow, blue, white, yellow, blue, yellow,
-            yellow, blue, white, yellow,
-            yellow, blue, white, yellow,
-            yellow, white, blue, yellow,
-            yellow, blue, yellow,
-            yellow,
-            reset
-        )
 
         if self.__os_id == 'arch-linux' or self.__os_id == 'archlinux' or self.__os_id == 'arch':
             self.__accent_color = blue
@@ -396,11 +364,7 @@ class Logo(object):
                 reset
             )
 
-        elif self.__os_id == 'linux-kernel' or self.__os_id == 'linuxkernel':
-            self.__accent_color = yellow
-            return default_logo
-
-        elif self.__os_id == 'linuxmint' or self.__os_id == 'linux-mint':
+        elif self.__os_id == 'linuxmint' or self.__os_id == 'linux-mint' or self.__os_id == 'mint':
             self.__accent_color = green
             return """
                                         
@@ -794,10 +758,52 @@ class Logo(object):
 
         else:
             self.__accent_color = yellow
-            return default_logo
+            return """
+{}               .''''''''.               
+{}              .'''''''''''              
+{}              ,MN{}'''{}NMN:{}''.             
+{}              l{}M{}N{}';'{}N{}M{}N{};'''             
+{}              :{}xXMMMMXxx{}'''             
+{}             .o{}xMMMMMXx'{},''.            
+{}             .k{}M{}'xNNK'{}MMd{}'''.           
+{}           ..{}dMMMMMMMMMMMl{}''''.         
+{}          .,{}OMMMMMMMMMMMMMd{}'''''.       
+{}        .'c{}NMMMMMMMMMMMMMMM0{},''''.      
+{}       .'o{}MMMMMMMMMMMMMMMMMMK{}''''''.    
+{}      '',{}WMMMMMMMMMMMMMMMMMMM{}:''''''    
+{}     .::,x{}WMMMMMMMMMMMMMMMMMMc{}'''''.    
+{}   .:kKKk{}l,d{}NMMMMMMMMMMMMMWO{}xK{}'''':{}kx   
+{}dkkkkkkkkkx{};'c0{}MMMMMMMMMMMW{}kkkkxxxkkk:  
+{}kkkkkkkkkkkkd{}:cX{}MMMMMMMMNko{}kkkkkkkkkkkk;
+{}kkkkkkkkkkkkkko{}:lodddoc{},''{}okkkkkkkkkk'  
+{}.;kkkkkkkkkkkkk{}.'''''':;..{}kkkkkkkkk'    
+{}   ''':xkkkkk'           'kkkkx'
+{}""".format(
+                blue,
+                blue,
+                white, blue, white, blue,
+                white, blue, white, blue, white, blue, white, blue,
+                blue, yellow, blue,
+                blue, yellow, blue,
+                blue, white, yellow, white, blue,
+                blue, white, blue,
+                blue, white, blue,
+                blue, white, blue,
+                blue, white, blue,
+                blue, white, blue,
+                blue, white, blue,
+                yellow, blue, white, yellow, blue, yellow,
+                yellow, blue, white, yellow,
+                yellow, blue, white, yellow,
+                yellow, white, blue, yellow,
+                yellow, blue, yellow,
+                yellow,
+                reset
+            )
 
 
 if __name__ == '__main__':
+    import time
     logo = Logo()  # ubuntu
     print(logo.get_colored_ansi_code())
 
@@ -805,3 +811,4 @@ if __name__ == '__main__':
         logo.set_os_name_id(distro_name)
         print(distro_name)
         print(logo.get_colored_ansi_code())
+        time.sleep(0.05)
