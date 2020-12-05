@@ -2,7 +2,7 @@
 
 *Screenshots*
 
-![Image](screens/screen1.png "screenshot")
+![Image](infofetch/data/screen1.png "screenshot")
 
-![Image](screens/screen2.png "screenshot")
+![Image](infofetch/data/screen2.png "screenshot")
 
