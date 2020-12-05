@@ -2,6 +2,7 @@
 import re
 import subprocess
 import sys
+import time
 
 import osinfo
 import oslogos
@@ -225,15 +226,15 @@ class Args(object):
             if '--help' in arg:
                 help_text = (
                     '--help ┐\n ┌─────┘\n'
-                    + 'Use:\n'
-                    + '  infofetch\n  infofetch [options]\n\n'
-                    + 'The available options are:\n'
-                    + 'OPTIONS                 DESCRIPTION\n'
-                    + '--help                  -Displays this help text\n'
-                    + '--list-supported-logos  -Displays a list with the name of the logos...\n'
-                    + '                         that are supported by this script\n'
-                    + '--show-all-logos        -Displays/draws on the screen all logos that...\n'
-                    + '                         are supported by this script'
+                    'Use:\n'
+                    '  infofetch\n  infofetch [options]\n\n'
+                    'The available options are:\n'
+                    'OPTIONS                 DESCRIPTION\n'
+                    '--help                  -Displays this help text\n'
+                    '--list-supported-logos  -Displays a list with the name of the logos...\n'
+                    '                         that are supported by this script\n'
+                    '--show-all-logos        -Displays/draws on the screen all logos that...\n'
+                    '                         are supported by this script'
                 )
                 print(help_text)
                 print()
@@ -250,16 +251,15 @@ class Args(object):
                 for ansi_logo in oslogos.Logo().get_list_of_supported_logos():
                     print(ansi_logo)
                     print(oslogos.Logo(ansi_logo).get_colored_ansi_code())
+                    time.sleep(0.05)
                 print()
                 continue
 
 
 if __name__ == '__main__':
     del(sys.argv[0])
-
     if sys.argv:
         args = Args()
-
     else:
         fetch = InfoFetch()
         fetch.main()
