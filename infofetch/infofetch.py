@@ -248,9 +248,12 @@ class Args(object):
 
             elif '--show-all-logos' in arg:
                 print('--show-all-logos ┐\n ┌───────────────┘')
-                for ansi_logo in oslogos.Logo().get_list_of_supported_logos():
+                logo = oslogos.Logo()
+                logo_list = logo.get_list_of_supported_logos()
+                for ansi_logo in logo_list:
+                    logo.set_os_name_id(ansi_logo)
                     print(ansi_logo)
-                    print(oslogos.Logo(ansi_logo).get_colored_ansi_code())
+                    print(logo.get_colored_ansi_code())
                     time.sleep(0.05)
                 print()
                 continue

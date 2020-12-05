@@ -9,19 +9,23 @@ class Logo(object):
 
     Create operating system logos using ANSI code.
     """
-    def __init__(self, os_name_id: str = 'linux'):
+    def __init__(self, os_name_id: str = None):
         """Class constructor"""
-        self.__os_id = os_name_id
+        self.__os_id = self.__automatically_set_the_name_id(os_name_id)
         self.__accent_color = str()
-        self.__colored_ansi_code = self.get_colored_ansi_code()
         self.__list_of_supported_logos = self.__supported_logos_list()
-        self.__automatically_set_the_name_id()
+        self.__colored_ansi_code = self.get_colored_ansi_code()
 
-    def __automatically_set_the_name_id(self) -> None:
-        if self.__os_id == 'linux':
-            name_id = osinfo.OsInfo().get_name_id()
-            if name_id in self.__list_of_supported_logos:
-                self.__os_id = name_id
+    @staticmethod
+    def __automatically_set_the_name_id(os_name_id) -> str:
+        if not os_name_id:
+            try:
+                name_id = osinfo.OsInfo().get_name_id()
+                return name_id
+            except Exception as error:
+                print(error)
+                return 'linux'
+        return os_name_id
 
     @staticmethod
     def __supported_logos_list() -> list:
