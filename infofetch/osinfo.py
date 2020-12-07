@@ -47,8 +47,6 @@ class OsInfo(object):
         self.__font = str()
         self.__browser = str()
 
-        self.get_all_release_info()
-
     def get_user(self) -> str:
         """The user name
 
@@ -110,17 +108,20 @@ class OsInfo(object):
         if self.__all_release_info:
             return self.__all_release_info
 
+        # Return var
+        all_release_info = dict()
+
         cat_release = subprocess.getoutput('cat /etc/os-release').split('\n')
         for item_release in cat_release:
             items = item_release.split('=')
-            self.__all_release_info[items[0]] = items[1].strip('"').strip("'")
+            all_release_info[items[0]] = items[1].strip('"').strip("'")
 
         # HACK: Identify some known distributions that do not configure version information as they should
         hack_name = False
         name = str()
         name_id = str()
 
-        if 'ubuntu' in self.__all_release_info['NAME'].lower():
+        if 'ubuntu' in all_release_info['NAME'].lower():
             # Lubuntu
             if 'openbox' in subprocess.getoutput('ls /usr/share/lubuntu/'):
                 hack_name = True
@@ -140,11 +141,12 @@ class OsInfo(object):
                 name_id = 'xubuntu'
 
         if hack_name:
-            self.__all_release_info['NAME'] = name
-            self.__all_release_info['ID'] = name_id
-            if 'PRETTY_NAME' in self.__all_release_info:
-                self.__all_release_info['PRETTY_NAME'] = self.__all_release_info['PRETTY_NAME'].replace('Ubuntu', name)
+            all_release_info['NAME'] = name
+            all_release_info['ID'] = name_id
+            if 'PRETTY_NAME' in all_release_info:
+                all_release_info['PRETTY_NAME'] = all_release_info['PRETTY_NAME'].replace('Ubuntu', name)
 
+        self.__all_release_info = all_release_info
         return self.__all_release_info
 
     def get_pretty_name(self) -> str:
@@ -156,6 +158,9 @@ class OsInfo(object):
         """
         if self.__pretty_name:
             return self.__pretty_name
+
+        if not self.__all_release_info:
+            self.get_all_release_info()
 
         if 'PRETTY_NAME' in self.__all_release_info:
             self.__pretty_name = self.__all_release_info['PRETTY_NAME']
@@ -172,6 +177,9 @@ class OsInfo(object):
         if self.__name:
             return self.__name
 
+        if not self.__all_release_info:
+            self.get_all_release_info()
+
         if 'NAME' in self.__all_release_info:
             self.__name = self.__all_release_info['NAME']
         return self.__name
@@ -185,6 +193,9 @@ class OsInfo(object):
         """
         if self.__name_id:
             return self.__name_id
+
+        if not self.__all_release_info:
+            self.get_all_release_info()
 
         if 'ID' in self.__all_release_info:
             self.__name_id = self.__all_release_info['ID']
@@ -204,6 +215,9 @@ class OsInfo(object):
         if self.__codename:
             return self.__codename
 
+        if not self.__all_release_info:
+            self.get_all_release_info()
+
         if 'VERSION_CODENAME' in self.__all_release_info:
             self.__codename = self.__all_release_info['VERSION_CODENAME']
         elif 'CODENAME' in self.__all_release_info:
@@ -220,6 +234,9 @@ class OsInfo(object):
         """
         if self.__version:
             return self.__version
+
+        if not self.__all_release_info:
+            self.get_all_release_info()
 
         if 'VERSION_ID' in self.__all_release_info:
             self.__version = self.__all_release_info['VERSION_ID']
@@ -351,8 +368,35 @@ class OsInfo(object):
         """
         if self.__ram:
             return self.__ram
+        # Somente um método pega todas as informações das memórias
+        # para evitar repetir o comando do shell
 
-        self.__ram = subprocess.getoutput("free -h | grep Mem | awk '{print $2}'").replace(',', '.')
+        # Pegar linhas da memória ram e swap
+        memory_info = subprocess.getoutput("free -h").replace(',', '.').split('\n')
+        ram_line = memory_info[1].split(' ')  # memory_info[0] é o cabeçalho
+        swap_line = memory_info[2].split(' ')
+
+        # Lista para armazenar as informações das memórias ram e swap
+        ram_info = list()
+        swap_info = list()
+
+        # Preencher as lista com caracteres válidos, removendo caracteres vazios
+        for ram in ram_line:
+            if ram != '':
+                ram_info.append(ram)
+        for swap in swap_line:
+            if swap != '':
+                swap_info.append(swap)
+
+        # Atribuir valores da memória ram
+        self.__ram = ram_info[1]
+        self.__ram_used = ram_info[2]
+        self.__ram_free = ram_info[3]
+        # Atribuir valores da memória swap
+        self.__swap = swap_info[1]
+        self.__swap_used = swap_info[2]
+        self.__swap_free = swap_info[3]
+
         return self.__ram
 
     def get_ram_used(self) -> str:
@@ -363,7 +407,7 @@ class OsInfo(object):
         if self.__ram_used:
             return self.__ram_used
 
-        self.__ram_used = subprocess.getoutput("free -h | grep Mem | awk '{print $3}'").replace(',', '.')
+        self.get_ram()
         return self.__ram_used
 
     def get_ram_free(self) -> str:
@@ -374,7 +418,7 @@ class OsInfo(object):
         if self.__ram_free:
             return self.__ram_free
 
-        self.__ram_free = subprocess.getoutput("free -h | grep Mem | awk '{print $4}'").replace(',', '.')
+        self.get_ram()
         return self.__ram_free
 
     def get_swap(self) -> str:
@@ -385,7 +429,7 @@ class OsInfo(object):
         if self.__swap:
             return self.__swap
 
-        self.__swap = subprocess.getoutput("free -h | grep Swap | awk '{print $2}'").replace(',', '.')
+        self.get_ram()
         return self.__swap
 
     def get_swap_used(self) -> str:
@@ -396,7 +440,7 @@ class OsInfo(object):
         if self.__swap_used:
             return self.__swap_used
 
-        self.__swap_used = subprocess.getoutput("free -h | grep Swap | awk '{print $3}'").replace(',', '.')
+        self.get_ram()
         return self.__swap_used
 
     def get_swap_free(self) -> str:
@@ -407,7 +451,7 @@ class OsInfo(object):
         if self.__swap_free:
             return self.__swap_free
 
-        self.__swap_free = subprocess.getoutput("free -h | grep Swap | awk '{print $4}'").replace(',', '.')
+        self.get_ram()
         return self.__swap_free
 
     def get_screen_resolution(self) -> str:
@@ -692,3 +736,6 @@ if __name__ == '__main__':
     print('              snap-packages:', oi.get_snap_packages())
     print('                       font:', oi.get_font())
     print('                    browser:', oi.get_browser())
+    r = oi.get_all_release_info()
+    for k, v in r.items():
+        print(k, '=', v)
