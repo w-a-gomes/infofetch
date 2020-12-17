@@ -132,13 +132,21 @@ class InfoFetch(object):
         return shell if shell else 'unknown'
 
     def get_desktop_environment(self) -> str:
-        de = self.__os_info.get_desktop_environment()
-        return '{} {}'.format(
-            de, self.__os_info.get_desktop_environment_version()) if de else 'unknown'
+        get_de = self.__os_info.get_desktop_environment()
+        get_de_version = self.__os_info.get_desktop_environment_version()
+        de = get_de if get_de else ''
+        de_version = get_de_version if get_de_version else ''
+        if de_version:
+            de = de + ' ' + de_version
+        return de if de else 'unknown'
 
     def get_window_manager(self) -> str:
         wm = self.__os_info.get_window_manager()
         return wm if wm else 'unknown'
+
+    def get_display_server(self):
+        ds = self.__os_info.get_display_server()
+        return ds if ds else 'unknown'
 
     def get_packages(self) -> str:
         native_packages = self.__os_info.get_packages()
@@ -189,6 +197,7 @@ class InfoFetch(object):
             self.accent_color + 'Shell: ' + '\033[m' + self.get_shell(),
             self.accent_color + 'DE: ' + '\033[m' + self.get_desktop_environment(),
             self.accent_color + 'WM: ' + '\033[m' + self.get_window_manager(),
+            self.accent_color + 'Display server: ' + '\033[m' + self.get_display_server(),
             self.accent_color + 'Packages: ' + '\033[m' + self.get_packages(),
             self.accent_color + 'Font: ' + '\033[m' + self.get_font(),
             self.accent_color + 'Default browser: ' + '\033[m' + self.get_browser(),
